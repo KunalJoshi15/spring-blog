@@ -42,3 +42,8 @@ GetMapping is used for creating the get request mapping for fetching all the pos
 By default java uses the PagingAndSortingRepository for getting the data. This is extended by the JpaRepository.
 
 We can even define the sort order to the PageRequest.of(pageSize,pageNo,SortDir)
+There is one to Many relationship Post and Comment.
+Post has the PostEntity (One To Many) ContentEntity.
+
+JoinColumn annotation is used for specifying the join column.
+CascadeType all annotation is used for making changes to the other linked entity as well.
