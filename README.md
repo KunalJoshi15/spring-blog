@@ -37,3 +37,8 @@ SimpleJpaRepository internally implements JpaRepository.
 The APIs will throw a ResourceNotFoundException whenever the resource is not found with given id.
 
 Whenever we are designing a rest api we need to follow the rest design pattern.
+
+GetMapping is used for creating the get request mapping for fetching all the posts.
+By default java uses the PagingAndSortingRepository for getting the data. This is extended by the JpaRepository.
+
+We can even define the sort order to the PageRequest.of(pageSize,pageNo,SortDir)

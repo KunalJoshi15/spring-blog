@@ -24,7 +24,6 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
-        log.info("Post id: {} is to be created", postDto.getId());
         return new ResponseEntity<>(postService.createPost(postDto),
                 HttpStatus.CREATED);
     }
@@ -34,6 +33,28 @@ public class PostController {
                                                      @RequestParam(required = false, defaultValue = "5") int pageSize) {
         return new ResponseEntity<>(postService.getAllPosts(PageRequest.of(pageNo,pageSize)),
                 HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PostDto> getPostById(@PathVariable(name = "id") long id) {
+        return new ResponseEntity<>(postService.getPostById(id),
+                HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PostDto> updatePostById(
+            @RequestBody PostDto postDto,
+            @PathVariable(name = "id") long id) {
+        return new ResponseEntity<>(postService.updatePostById(postDto, id),
+                HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePostById(
+            @PathVariable(name = "id") long id
+    ) {
+        postService.deletePostById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
