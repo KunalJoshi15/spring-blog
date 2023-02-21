@@ -2,6 +2,7 @@ package com.example.blogapp.service.impl;
 
 import com.example.blogapp.entity.Post;
 import com.example.blogapp.exception.ResourceNotFoundException;
+import com.example.blogapp.payload.CommentDto;
 import com.example.blogapp.payload.PostDto;
 import com.example.blogapp.repository.PostRepository;
 import com.example.blogapp.service.PostService;
@@ -37,6 +38,7 @@ public class PostServiceImpl implements PostService {
 
         // Entity to Dto
         PostDto returnDto = this.modelMapper.map(returnPost, PostDto.class);
+
         log.info("Created post with id {}",returnDto.getId());
         return returnDto;
     }
@@ -49,6 +51,7 @@ public class PostServiceImpl implements PostService {
                 this.modelMapper.map(post,PostDto.class))
                 .collect(Collectors.toList());
         log.info("Fetched total posts {}",allPostDtos.size());
+
         return allPostDtos;
     }
 
