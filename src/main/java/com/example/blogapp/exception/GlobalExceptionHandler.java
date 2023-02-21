@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestControllerAdvice
@@ -16,13 +18,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDetails resourceNotFoundException(
-            ResourceNotFoundException resourceNotFoundException
+            ResourceNotFoundException resourceNotFoundException,
+            WebRequest webRequest
     ) {
         String message = resourceNotFoundException.getMessage();
         log.info("Resource is not found with id: {} and exception: {}",
                 resourceNotFoundException.getFieldName(),
                 resourceNotFoundException.fillInStackTrace());
         return ErrorDetails.builder().errorId(UUID.randomUUID().toString())
+                .dateTime(LocalDateTime.now())
+                .path(webRequest.getDescription(false))
                 .message(message).build();
     }
 }
