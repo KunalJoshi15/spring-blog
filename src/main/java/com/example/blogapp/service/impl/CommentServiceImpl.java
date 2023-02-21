@@ -92,6 +92,6 @@ public class CommentServiceImpl implements CommentService {
             throw new BlogApiException(HttpStatus.BAD_REQUEST, "Comment does not belong to specified post");
         }
 
-
+        commentRepository.deleteById(commentId);
     }
 }
