@@ -47,3 +47,6 @@ Post has the PostEntity (One To Many) ContentEntity.
 
 JoinColumn annotation is used for specifying the join column.
 CascadeType all annotation is used for making changes to the other linked entity as well.
+Lets add the validation in case of the java spring boot application. Usually for adding the validations we use the jsr library.
+It is just an extension to the hibernate other library and we can use the annotations which were part of hibernate.
+Starting from the spring version 2.3 we need to explicitly add the spring-boot-starter-validation dependency.
