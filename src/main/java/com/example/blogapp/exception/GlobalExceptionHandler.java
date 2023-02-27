@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -55,14 +56,35 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((objectError -> {
-            String fieldName = ((FieldError) objectError).getField();
-            String message = ((FieldError) objectError).getDefaultMessage();
-            errors.put(fieldName, message);
-        }));
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        String message = ex.getMessage();
+        log.error(ex.fillInStackTrace().toString());
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .errorId(UUID.randomUUID().toString())
+                .dateTime(LocalDateTime.now())
+                .path(request.getDescription(false))
+                .message(message)
+                .build();
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorDetails unauthorizedException(
+            AccessDeniedException accessDeniedException,
+            WebRequest webRequest
+    ) {
+        String message = accessDeniedException.getMessage();
+        log.error("Resource is not found with id: {} and exception: {} AccessDenied ",
+                accessDeniedException.getMessage(),
+                accessDeniedException.fillInStackTrace());
+
+        return ErrorDetails.builder()
+                .errorId(UUID.randomUUID().toString())
+                .dateTime(LocalDateTime.now())
+                .path(webRequest.getDescription(false))
+                .message(message).build();
+    }
+
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
